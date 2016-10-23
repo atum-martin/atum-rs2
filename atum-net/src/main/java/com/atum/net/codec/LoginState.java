@@ -1,4 +1,4 @@
-package com.atum.net;
+package com.atum.net.codec;
 
 public enum LoginState {
 

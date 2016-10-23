@@ -1,6 +1,10 @@
 package com.atum.net;
 
 import io.netty.channel.ChannelHandler.Sharable;
+
+import com.atum.net.codec.LoginDecoder;
+import com.atum.net.codec.LoginState;
+
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
@@ -27,7 +31,7 @@ public class PipelineInitializer extends ChannelInitializer<SocketChannel> {
 		channel.attr(LOGIN_STATE).setIfAbsent(LoginState.HANDSHAKE);
 
 		pipeline.addLast("timeout", new IdleStateHandler(10000, 0, 0));
-		pipeline.addLast("login-header-decoder", new LoginHeaderDecoder());
+		pipeline.addLast("login-header-decoder", new LoginDecoder());
 		// pipeline.addLast("packet-encoder", new PacketEncoder());
 
 		pipeline.addLast("channel-handler", ACCECPTOR_HANDLER);
