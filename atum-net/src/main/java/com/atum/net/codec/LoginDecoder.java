@@ -181,6 +181,8 @@ public class LoginDecoder extends ByteToMessageDecoder {
 			sendFinalResponse(context, LoginResponse.INVALID_CREDENTIALS);
 			return;
 		}
+		
+		context.pipeline().replace("login-header-decoder","game-packet-decoder", new GamePacketDecoder(decryptor));
 
 		// out.add(new LoginDetailsPacket(ctx, username, password, uuid, encryptor, decryptor));
 	}

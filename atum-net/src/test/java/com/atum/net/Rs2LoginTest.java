@@ -96,7 +96,7 @@ public class Rs2LoginTest {
 		buf.readByte();
 		long key = buf.readLong();
 		int opCode = s.getInputStream().read();
-
+		s.close();
 		System.out.println("op " + opCode);
 		return opCode;
 
