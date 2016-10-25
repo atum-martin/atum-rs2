@@ -72,4 +72,5 @@ public class GamePacketDecoder extends ByteToMessageDecoder {
 
 		state = packetSize == -2 || packetSize == -1 ? State.SIZE : State.PAYLOAD;
 	}
+	
 }
