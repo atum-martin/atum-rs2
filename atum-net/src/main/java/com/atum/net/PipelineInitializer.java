@@ -22,6 +22,11 @@ public class PipelineInitializer extends ChannelInitializer<SocketChannel> {
 	public static final AttributeKey<LoginState> LOGIN_STATE = AttributeKey.newInstance("LoginState");
 
 	private final ChannelAcceptorHandler ACCECPTOR_HANDLER = new ChannelAcceptorHandler();
+	private final GameService gameService;
+	
+	public PipelineInitializer(GameService gameService){
+		this.gameService = gameService;
+	}
 
 	@Override
 	protected void initChannel(SocketChannel channel) throws Exception {
@@ -31,7 +36,7 @@ public class PipelineInitializer extends ChannelInitializer<SocketChannel> {
 		channel.attr(LOGIN_STATE).setIfAbsent(LoginState.HANDSHAKE);
 
 		pipeline.addLast("timeout", new IdleStateHandler(10000, 0, 0));
-		pipeline.addLast("login-header-decoder", new LoginDecoder());
+		pipeline.addLast("login-header-decoder", new LoginDecoder(gameService));
 		// pipeline.addLast("packet-encoder", new PacketEncoder());
 
 		pipeline.addLast("channel-handler", ACCECPTOR_HANDLER);

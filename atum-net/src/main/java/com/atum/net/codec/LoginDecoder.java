@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.atum.net.ByteBufUtils;
+import com.atum.net.GameService;
 import com.atum.net.IsaacCipher;
 import com.atum.net.PipelineInitializer;
 
@@ -32,8 +33,13 @@ public class LoginDecoder extends ByteToMessageDecoder {
 			"72640252303588278644467876834506654511692882736878142674473705672822320822095174696379303197013981434572187481298130748148385818094460521624198552406940508805602215708418094058951352076283100448576575511642453669107583920561043364042814766866691981132717812444681081534760715694225059124574441435942822149161");
 
 	private int encryptedLoginBlockSize;
+	private GameService gameService;
 
 	private static final Random random = new SecureRandom();
+
+	public LoginDecoder(GameService gameService) {
+		this.gameService = gameService;
+	}
 
 	@Override
 	protected void decode(ChannelHandlerContext context, ByteBuf buffer, List<Object> outStream) throws Exception {
@@ -182,7 +188,7 @@ public class LoginDecoder extends ByteToMessageDecoder {
 			return;
 		}
 		
-		context.pipeline().replace("login-header-decoder","game-packet-decoder", new GamePacketDecoder(decryptor));
+		context.pipeline().replace("login-header-decoder","game-packet-decoder", new GamePacketDecoder(gameService,decryptor));
 
 		// out.add(new LoginDetailsPacket(ctx, username, password, uuid, encryptor, decryptor));
 	}

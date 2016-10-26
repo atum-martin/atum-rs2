@@ -2,7 +2,9 @@ package com.atum.net.codec;
 
 import java.util.List;
 
+import com.atum.net.GameService;
 import com.atum.net.IsaacCipher;
+import com.atum.net.model.GamePacket;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -18,17 +20,28 @@ public class GamePacketDecoder extends ByteToMessageDecoder {
 	private int packetOpCode = 0;
 	private int packetSize = 0;
 	private PacketHeader packetType = PacketHeader.EMPTY;
+	private GameService service;
 
 	private enum State {
 		OPCODE, SIZE, PAYLOAD;
 	}
 	
 	private enum PacketHeader {
-		VARIABLE_BYTE, VARIABLE_SHORT, FIXED, EMPTY;
+		VARIABLE_BYTE(1), VARIABLE_SHORT(2), FIXED(0), EMPTY(0);
+		private int size;
+		
+		PacketHeader(int size){
+			this.size = size;
+		}
+		
+		public int size(){
+			return size;
+		}
 	}
 
-	public GamePacketDecoder(IsaacCipher decryptor) {
+	public GamePacketDecoder(GameService service,IsaacCipher decryptor) {
 		this.decryptor = decryptor;
+		this.service = service;
 	}
 
 	@Override
@@ -41,13 +54,36 @@ public class GamePacketDecoder extends ByteToMessageDecoder {
 			break;
 
 		case SIZE:
-			//decodeSize(in);
+			decodeSize(in);
 			break;
 
 		case PAYLOAD:
-			//decodePayload(in);
+			decodePayload(in);
 			break;
 
+		}
+	}
+	
+	private void queuePacket(ByteBuf readBytes) {
+		service.queuePacket(new GamePacket(packetOpCode,packetSize,readBytes));
+	}
+
+	private void decodePayload(ByteBuf in) {
+		if (in.isReadable(packetType.size())) {
+			queuePacket(in.readBytes(packetSize));
+			state = State.OPCODE;
+		}
+	}
+
+	private void decodeSize(ByteBuf in) {
+		if (in.isReadable(packetSize)) {
+			if(packetType == PacketHeader.VARIABLE_BYTE){
+				packetSize |= in.readUnsignedByte();
+			} else if(packetType == PacketHeader.VARIABLE_SHORT){
+				packetSize |= in.readUnsignedByte();
+				packetSize |= in.readUnsignedByte() << 8;
+			}
+			state = State.PAYLOAD;
 		}
 	}
 
@@ -66,10 +102,10 @@ public class GamePacketDecoder extends ByteToMessageDecoder {
 		}
 
 		if (packetSize == 0) {
-			//queuePacket(Unpooled.EMPTY_BUFFER);
+			queuePacket(Unpooled.EMPTY_BUFFER);
 			return;
 		}
-
+		
 		state = packetSize == -2 || packetSize == -1 ? State.SIZE : State.PAYLOAD;
 	}
 	

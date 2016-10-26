@@ -9,10 +9,12 @@ public class NettyBootstrap {
 
 	public static void main(String[] args) {
 		EventLoopGroup loopGroup = new NioEventLoopGroup();
+		
+		GameService gameService = null;
 
 		ServerBootstrap bootstrap = new ServerBootstrap();
 
-		bootstrap.group(loopGroup).channel(NioServerSocketChannel.class).childHandler(new PipelineInitializer()).bind(43594).syncUninterruptibly();
+		bootstrap.group(loopGroup).channel(NioServerSocketChannel.class).childHandler(new PipelineInitializer(gameService)).bind(43594).syncUninterruptibly();
 	}
 
 }
