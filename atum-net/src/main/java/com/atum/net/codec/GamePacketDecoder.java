@@ -5,6 +5,7 @@ import java.util.List;
 import com.atum.net.GameService;
 import com.atum.net.IsaacCipher;
 import com.atum.net.model.GamePacket;
+import com.atum.net.model.PacketHeader;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -25,28 +26,14 @@ public class GamePacketDecoder extends ByteToMessageDecoder {
 	private enum State {
 		OPCODE, SIZE, PAYLOAD;
 	}
-	
-	private enum PacketHeader {
-		VARIABLE_BYTE(1), VARIABLE_SHORT(2), FIXED(0), EMPTY(0);
-		private int size;
-		
-		PacketHeader(int size){
-			this.size = size;
-		}
-		
-		public int size(){
-			return size;
-		}
-	}
 
-	public GamePacketDecoder(GameService service,IsaacCipher decryptor) {
+	public GamePacketDecoder(GameService service, IsaacCipher decryptor) {
 		this.decryptor = decryptor;
 		this.service = service;
 	}
 
 	@Override
-	protected void decode(ChannelHandlerContext context, ByteBuf in,
-			List<Object> out) throws Exception {
+	protected void decode(ChannelHandlerContext context, ByteBuf in, List<Object> out) throws Exception {
 		switch (state) {
 
 		case OPCODE:
@@ -63,9 +50,9 @@ public class GamePacketDecoder extends ByteToMessageDecoder {
 
 		}
 	}
-	
+
 	private void queuePacket(ByteBuf readBytes) {
-		service.queuePacket(new GamePacket(packetOpCode,packetSize,readBytes));
+		service.queuePacket(new GamePacket(packetOpCode, packetSize, readBytes));
 	}
 
 	private void decodePayload(ByteBuf in) {
@@ -77,9 +64,9 @@ public class GamePacketDecoder extends ByteToMessageDecoder {
 
 	private void decodeSize(ByteBuf in) {
 		if (in.isReadable(packetSize)) {
-			if(packetType == PacketHeader.VARIABLE_BYTE){
+			if (packetType == PacketHeader.VARIABLE_BYTE) {
 				packetSize |= in.readUnsignedByte();
-			} else if(packetType == PacketHeader.VARIABLE_SHORT){
+			} else if (packetType == PacketHeader.VARIABLE_SHORT) {
 				packetSize |= in.readUnsignedByte();
 				packetSize |= in.readUnsignedByte() << 8;
 			}
@@ -105,8 +92,8 @@ public class GamePacketDecoder extends ByteToMessageDecoder {
 			queuePacket(Unpooled.EMPTY_BUFFER);
 			return;
 		}
-		
+
 		state = packetSize == -2 || packetSize == -1 ? State.SIZE : State.PAYLOAD;
 	}
-	
+
 }
