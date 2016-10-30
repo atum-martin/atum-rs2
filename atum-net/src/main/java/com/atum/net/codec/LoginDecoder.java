@@ -133,7 +133,7 @@ public class LoginDecoder extends ByteToMessageDecoder {
 
 		int clientVersion = buffer.readUnsignedShort();
 		Revision revision = gameService.getClientRevision(""+clientVersion);
-		if (revision != null) {
+		if (revision == null) {
 			logger.debug("Invalid version "+clientVersion);
 			sendFinalResponse(context, LoginResponse.LOGIN_SERVER_REJECTED_SESSION);
 			return;
