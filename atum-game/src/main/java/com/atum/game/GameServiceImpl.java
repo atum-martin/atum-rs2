@@ -1,4 +1,4 @@
-package org.atum.game;
+package com.atum.game;
 
 import java.util.HashMap;
 import java.util.Map;

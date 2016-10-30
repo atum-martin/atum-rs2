@@ -1,4 +1,4 @@
-package org.atum.revision.r317;
+package com.atum.revision.r317;
 
 import com.atum.net.model.Revision;
 

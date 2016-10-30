@@ -1,10 +1,10 @@
-package org.atum.game;
+package com.atum.game;
 
 import org.apache.log4j.BasicConfigurator;
-import org.atum.revision.r317.Revision317;
 
 import com.atum.net.GameService;
 import com.atum.net.NettyBootstrap;
+import com.atum.revision.r317.Revision317;
 
 public class Main {
 

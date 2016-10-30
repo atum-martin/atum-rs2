@@ -1,13 +1,17 @@
-package com.atum.net;
+package com.atum.game;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import org.apache.log4j.BasicConfigurator;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import com.atum.game.Main;
+import com.atum.net.NettyBootstrap;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -16,7 +20,7 @@ public class Rs2LoginTest {
 
 	@BeforeClass
 	public static void testSetup() throws IOException {
-		NettyBootstrap.main(null);
+		Main.main(null);
 	}
 
 	@Test
