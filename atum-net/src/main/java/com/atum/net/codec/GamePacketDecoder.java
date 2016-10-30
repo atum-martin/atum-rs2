@@ -4,8 +4,10 @@ import java.util.List;
 
 import com.atum.net.GameService;
 import com.atum.net.IsaacCipher;
+import com.atum.net.NetworkConstants;
 import com.atum.net.model.GamePacket;
 import com.atum.net.model.PacketHeader;
+import com.atum.net.model.Revision;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -16,7 +18,6 @@ public class GamePacketDecoder extends ByteToMessageDecoder {
 
 	private final IsaacCipher decryptor;
 	private State state = State.OPCODE;
-	public static final int PACKET_SIZES[] = new int[257];
 
 	private int packetOpCode = 0;
 	private int packetSize = 0;
@@ -37,7 +38,8 @@ public class GamePacketDecoder extends ByteToMessageDecoder {
 		switch (state) {
 
 		case OPCODE:
-			decodeOpcode(in);
+			Revision rev = context.attr(NetworkConstants.REVISION).get();
+			decodeOpcode(in, rev);
 			break;
 
 		case SIZE:
@@ -74,10 +76,10 @@ public class GamePacketDecoder extends ByteToMessageDecoder {
 		}
 	}
 
-	private void decodeOpcode(ByteBuf in) {
+	private void decodeOpcode(ByteBuf in, Revision rev) {
 		if (in.isReadable()) {
 			packetOpCode = (in.readByte() - decryptor.getKey() & 0xFF);
-			packetSize = PACKET_SIZES[packetOpCode];
+			packetSize = rev.getServerPacketSizes()[packetOpCode];
 
 			if (packetSize == -1) {
 				packetType = PacketHeader.VARIABLE_BYTE;

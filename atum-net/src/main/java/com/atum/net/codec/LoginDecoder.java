@@ -8,6 +8,7 @@ import java.util.Random;
 import com.atum.net.ByteBufUtils;
 import com.atum.net.GameService;
 import com.atum.net.IsaacCipher;
+import com.atum.net.NetworkConstants;
 import com.atum.net.PipelineInitializer;
 import com.atum.net.model.Revision;
 
@@ -48,7 +49,7 @@ public class LoginDecoder extends ByteToMessageDecoder {
 
 	@Override
 	protected void decode(ChannelHandlerContext context, ByteBuf buffer, List<Object> outStream) throws Exception {
-		LoginState state = context.channel().attr(PipelineInitializer.LOGIN_STATE).get();
+		LoginState state = context.channel().attr(NetworkConstants.LOGIN_STATE).get();
 		switch (state) {
 		case HANDSHAKE:
 			handleHandshake(context, buffer);
@@ -93,7 +94,7 @@ public class LoginDecoder extends ByteToMessageDecoder {
 		long randomLong = random.nextLong();
 		buf.writeLong(randomLong);
 		context.writeAndFlush(buf);
-		context.channel().attr(PipelineInitializer.LOGIN_STATE).set(LoginState.HEADER);
+		context.channel().attr(NetworkConstants.LOGIN_STATE).set(LoginState.HEADER);
 	}
 
 	private void handleLoginHeader(ChannelHandlerContext context, ByteBuf buffer) {
@@ -108,7 +109,7 @@ public class LoginDecoder extends ByteToMessageDecoder {
 			return;
 		}
 
-		context.channel().attr(PipelineInitializer.LOGIN_STATE).set(LoginState.LOGIN_BLOCK_HEADER);
+		context.channel().attr(NetworkConstants.LOGIN_STATE).set(LoginState.LOGIN_BLOCK_HEADER);
 	}
 
 	private void handleLoginBlockHeader(ChannelHandlerContext context, ByteBuf buffer) {
@@ -117,7 +118,7 @@ public class LoginDecoder extends ByteToMessageDecoder {
 		}
 		// usually 77 according to docs.
 		encryptedLoginBlockSize = buffer.readUnsignedByte();
-		context.channel().attr(PipelineInitializer.LOGIN_STATE).set(LoginState.LOGIN_BLOCK);
+		context.channel().attr(NetworkConstants.LOGIN_STATE).set(LoginState.LOGIN_BLOCK);
 	}
 
 	private void handleLoginBlock(ChannelHandlerContext context, ByteBuf buffer) {
