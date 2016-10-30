@@ -9,12 +9,15 @@ import com.atum.net.ByteBufUtils;
 import com.atum.net.GameService;
 import com.atum.net.IsaacCipher;
 import com.atum.net.PipelineInitializer;
+import com.atum.net.model.Revision;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
+
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -40,6 +43,8 @@ public class LoginDecoder extends ByteToMessageDecoder {
 	public LoginDecoder(GameService gameService) {
 		this.gameService = gameService;
 	}
+	
+	private Logger logger = Logger.getLogger(LoginDecoder.class);
 
 	@Override
 	protected void decode(ChannelHandlerContext context, ByteBuf buffer, List<Object> outStream) throws Exception {
@@ -65,6 +70,7 @@ public class LoginDecoder extends ByteToMessageDecoder {
 	private void sendFinalResponse(ChannelHandlerContext context, LoginResponse response) {
 		ByteBuf buffer = Unpooled.buffer(1);
 		buffer.writeByte(response.getOpcode());
+		logger.debug("loginDecoding failed: "+response.getOpcode());
 		context.writeAndFlush(buffer).addListener(ChannelFutureListener.CLOSE);
 	}
 
@@ -76,6 +82,7 @@ public class LoginDecoder extends ByteToMessageDecoder {
 		int nameHash = buffer.readUnsignedByte();
 
 		if (requestOpCode != GAME_SEVER_OPCODE && requestOpCode != FILE_SERVER_OPCODE) {
+			logger.debug("Invalid request opcode "+requestOpCode);
 			sendFinalResponse(context, LoginResponse.INVALID_LOGIN_SERVER);
 			return;
 		}
@@ -96,6 +103,7 @@ public class LoginDecoder extends ByteToMessageDecoder {
 		int connectionType = buffer.readUnsignedByte();
 
 		if (connectionType != NEW_CONNECTION_OPCODE && connectionType != RECONNECTION_OPCODE) {
+			logger.debug("Invalid connection type "+connectionType);
 			sendFinalResponse(context, LoginResponse.LOGIN_SERVER_REJECTED_SESSION);
 			return;
 		}
@@ -118,13 +126,15 @@ public class LoginDecoder extends ByteToMessageDecoder {
 		}
 		int magicValue = buffer.readUnsignedByte();
 		if (magicValue != 255) {
+			logger.debug("Invalid magic value "+magicValue);
 			sendFinalResponse(context, LoginResponse.LOGIN_SERVER_REJECTED_SESSION);
 			return;
 		}
 
 		int clientVersion = buffer.readUnsignedShort();
-
-		if (clientVersion != 317) {
+		Revision revision = gameService.getClientRevision(""+clientVersion);
+		if (revision != null) {
+			logger.debug("Invalid version "+clientVersion);
 			sendFinalResponse(context, LoginResponse.LOGIN_SERVER_REJECTED_SESSION);
 			return;
 		}
@@ -132,6 +142,7 @@ public class LoginDecoder extends ByteToMessageDecoder {
 		int memoryVersion = buffer.readUnsignedByte();
 
 		if (memoryVersion != 0 && memoryVersion != 1) {
+			logger.debug("Invalid memory version "+memoryVersion);
 			sendFinalResponse(context, LoginResponse.LOGIN_SERVER_REJECTED_SESSION);
 			return;
 		}
@@ -145,6 +156,7 @@ public class LoginDecoder extends ByteToMessageDecoder {
 		int expectedSize = buffer.readUnsignedByte();
 		
 		if (expectedSize != encryptedLoginBlockSize - 41) {
+			logger.debug("Invalid rsa length "+expectedSize+" "+(encryptedLoginBlockSize - 41));
 			sendFinalResponse(context, LoginResponse.LOGIN_SERVER_REJECTED_SESSION);
 			return;
 		}
@@ -156,6 +168,7 @@ public class LoginDecoder extends ByteToMessageDecoder {
 
 		int rsa = buffer.readUnsignedByte();
 		if (rsa != 10) {
+			logger.debug("Invalid rsa byte "+rsa);
 			sendFinalResponse(context, LoginResponse.LOGIN_SERVER_REJECTED_SESSION);
 			return;
 		}
@@ -179,11 +192,12 @@ public class LoginDecoder extends ByteToMessageDecoder {
 		String username = ByteBufUtils.readJagString(buffer);
 		String password = ByteBufUtils.readJagString(buffer);
 
-		System.out.println("uuid: "+uuid);
-		System.out.println("username: "+username);
-		System.out.println("password: "+password);
+		logger.debug("uuid: "+uuid);
+		logger.debug("username: "+username);
+		logger.debug("password: "+password);
 		
 		if (password.length() < 6 || password.length() > 20 || username.isEmpty() || username.length() > 12) {
+			logger.debug("Invalid password length "+password);
 			sendFinalResponse(context, LoginResponse.INVALID_CREDENTIALS);
 			return;
 		}

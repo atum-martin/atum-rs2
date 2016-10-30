@@ -9,5 +9,7 @@
   <description>atum-rs2</description>
   <modules>
     <module>atum-net</module>
+    <module>atum-revision</module>
+    <module>atum-game</module>
   </modules>
 </project>
