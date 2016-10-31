@@ -10,7 +10,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.atum.game.Main;
+import com.atum.game.RS2Server;
 import com.atum.net.NettyBootstrap;
 
 import io.netty.buffer.ByteBuf;
@@ -20,7 +20,7 @@ public class Rs2LoginTest {
 
 	@BeforeClass
 	public static void testSetup() throws IOException {
-		Main.main(null);
+		RS2Server.main(null);
 	}
 
 	@Test

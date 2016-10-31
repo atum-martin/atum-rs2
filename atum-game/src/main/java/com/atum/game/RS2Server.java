@@ -6,7 +6,7 @@ import com.atum.net.GameService;
 import com.atum.net.NettyBootstrap;
 import com.atum.revision.r317.Revision317;
 
-public class Main {
+public class RS2Server {
 
 	public static void main(String[] args) {
 		BasicConfigurator.configure();
