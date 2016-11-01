@@ -10,9 +10,12 @@ public class RS2Server {
 
 	public static void main(String[] args) {
 		BasicConfigurator.configure();
+		Configuration config = Configuration.loadServerConfig();
 		GameService service = new GameServiceImpl();
 		service.registerRevision(new Revision317());
-		NettyBootstrap.listen(service,43594);
+		NettyBootstrap.listen(service, config.getPort());
 	}
+
+	
 
 }
