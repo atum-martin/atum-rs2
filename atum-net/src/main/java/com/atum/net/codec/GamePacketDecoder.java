@@ -38,7 +38,7 @@ public class GamePacketDecoder extends ByteToMessageDecoder {
 		switch (state) {
 
 		case OPCODE:
-			Revision rev = context.attr(NetworkConstants.REVISION).get();
+			Revision rev = context.channel().attr(NetworkConstants.REVISION).get();
 			decodeOpcode(in, rev);
 			break;
 

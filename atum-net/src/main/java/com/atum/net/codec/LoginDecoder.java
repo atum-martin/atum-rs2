@@ -202,7 +202,7 @@ public class LoginDecoder extends ByteToMessageDecoder {
 			sendFinalResponse(context, LoginResponse.INVALID_CREDENTIALS);
 			return;
 		}
-		
+		context.pipeline().addLast("game-packet-encoder", new GamePacketEncoder(encryptor));
 		context.pipeline().replace("login-header-decoder","game-packet-decoder", new GamePacketDecoder(gameService,decryptor));
 
 		// out.add(new LoginDetailsPacket(ctx, username, password, uuid, encryptor, decryptor));
