@@ -9,7 +9,7 @@ import com.atum.net.ByteBufUtils;
 import com.atum.net.GameService;
 import com.atum.net.IsaacCipher;
 import com.atum.net.NetworkConstants;
-import com.atum.net.PipelineInitializer;
+import com.atum.net.model.PlayerDetails;
 import com.atum.net.model.Revision;
 
 import io.netty.buffer.ByteBuf;
@@ -31,8 +31,10 @@ public class LoginDecoder extends ByteToMessageDecoder {
 	private static final int NEW_CONNECTION_OPCODE = 16;
 	private static final int RECONNECTION_OPCODE = 18;
 
+	@SuppressWarnings("unused")
 	private static final BigInteger RSA_MODULUS = new BigInteger(
 			"94904992129904410061849432720048295856082621425118273522925386720620318960919649616773860564226013741030211135158797393273808089000770687087538386210551037271884505217469135237269866084874090369313013016228010726263597258760029391951907049483204438424117908438852851618778702170822555894057960542749301583313");
+	@SuppressWarnings("unused")
 	private static final BigInteger RSA_EXPONENT = new BigInteger(
 			"72640252303588278644467876834506654511692882736878142674473705672822320822095174696379303197013981434572187481298130748148385818094460521624198552406940508805602215708418094058951352076283100448576575511642453669107583920561043364042814766866691981132717812444681081534760715694225059124574441435942822149161");
 
@@ -80,6 +82,7 @@ public class LoginDecoder extends ByteToMessageDecoder {
 			return;
 		}
 		int requestOpCode = buffer.readUnsignedByte();
+		@SuppressWarnings("unused")
 		int nameHash = buffer.readUnsignedByte();
 
 		if (requestOpCode != GAME_SEVER_OPCODE && requestOpCode != FILE_SERVER_OPCODE) {
@@ -202,6 +205,10 @@ public class LoginDecoder extends ByteToMessageDecoder {
 			sendFinalResponse(context, LoginResponse.INVALID_CREDENTIALS);
 			return;
 		}
+		
+		PlayerDetails player = gameService.registerPlayer(username,password,uuid);
+		
+		
 		context.pipeline().addLast("game-packet-encoder", new GamePacketEncoder(encryptor));
 		context.pipeline().replace("login-header-decoder","game-packet-decoder", new GamePacketDecoder(gameService,decryptor));
 
