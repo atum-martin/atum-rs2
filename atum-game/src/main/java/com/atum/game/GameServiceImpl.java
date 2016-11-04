@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.atum.net.GameService;
 import com.atum.net.model.GamePacket;
+import com.atum.net.model.PlayerDetails;
 import com.atum.net.model.Revision;
 
 public class GameServiceImpl implements GameService {
@@ -24,6 +25,12 @@ public class GameServiceImpl implements GameService {
 
 	public Revision getClientRevision(String version) {
 		return clientRevs.get(version);
+	}
+
+	public PlayerDetails registerPlayer(String username, String password,
+			String uuid) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

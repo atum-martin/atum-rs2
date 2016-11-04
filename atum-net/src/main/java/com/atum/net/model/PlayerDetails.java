@@ -2,7 +2,7 @@ package com.atum.net.model;
 
 public class PlayerDetails {
 
-	private enum Rights {
+	public enum Rights {
 		NORMAL(0),
 		MOD(1),
 		ADMIN(2),
@@ -14,7 +14,15 @@ public class PlayerDetails {
 			this.rights = rights;
 		}
 		
+		public int value(){
+			return rights;
+		}
+		
 	}
 	
 	private Rights rights = Rights.NORMAL;
+
+	public Rights getRights() {
+		return rights;
+	}
 }
