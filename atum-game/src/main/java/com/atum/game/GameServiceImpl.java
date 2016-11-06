@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 
 import com.atum.game.world.model.Player;
 import com.atum.net.GameService;
+import com.atum.net.model.ActionSender;
 import com.atum.net.model.GamePacket;
 import com.atum.net.model.PlayerDetails;
 import com.atum.net.model.Revision;
@@ -33,8 +34,8 @@ public class GameServiceImpl implements GameService {
 	}
 
 	public PlayerDetails registerPlayer(String username, String password,
-			String uuid) {
-		Player player = new Player(username, password, uuid);
+			String uuid, ActionSender sender) {
+		Player player = new Player(username, password, uuid, sender);
 		return player;
 	}
 

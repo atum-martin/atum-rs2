@@ -61,6 +61,8 @@ public class Revision317 implements Revision {
 			0, 4, 0, 0, 0, 0, -1, 0, -1, 4,//240
 			0, 0, 6, 6, 0, 0, 0            //250
 		};
+	
+	private ActionSender actionSender = new ActionSender();
 
 	public String getVersion() {
 		return "317";
@@ -72,6 +74,10 @@ public class Revision317 implements Revision {
 
 	public int[] getServerPacketSizes() {
 		return SERVER_PACKET_SIZES;
+	}
+	
+	public ActionSender getActionSender(){
+		return actionSender;
 	}
 
 }

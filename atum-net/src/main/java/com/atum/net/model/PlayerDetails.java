@@ -21,8 +21,9 @@ public class PlayerDetails {
 	private String username;
 	private String password;
 	private String uuid;
+	private ActionSender actionSender;
 
-	public PlayerDetails(String username, String password, String uuid) {
+	public PlayerDetails(String username, String password, String uuid,ActionSender actionSender) {
 		this.username = username;
 		this.password = password;
 		this.uuid = uuid;
@@ -34,5 +35,9 @@ public class PlayerDetails {
 
 	public String getName() {
 		return username;
+	}
+	
+	public ActionSender getActionSender(){
+		return actionSender;
 	}
 }
