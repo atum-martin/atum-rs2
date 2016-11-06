@@ -215,7 +215,8 @@ public class LoginDecoder extends ByteToMessageDecoder {
 		out.writeByte(0);
 		context.writeAndFlush(out);
 		
+		context.channel().attr(NetworkConstants.REVISION).set(revision);
 		context.pipeline().addLast("game-packet-encoder", new GamePacketEncoder(encryptor));
-		context.pipeline().replace("login-header-decoder","game-packet-decoder", new GamePacketDecoder(gameService,decryptor));
+		context.pipeline().replace("login-header-decoder","game-packet-decoder", new GamePacketDecoder(gameService,player,decryptor));
 	}
 }

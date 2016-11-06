@@ -6,7 +6,7 @@ import com.atum.net.model.Revision;
 
 public interface GameService {
 	
-	public void queuePacket(GamePacket packet);
+	public void queuePacket(PlayerDetails player,GamePacket packet);
 	public boolean registerRevision(Revision rev);
 	public Revision getClientRevision(String version);
 	public PlayerDetails registerPlayer(String username, String password,

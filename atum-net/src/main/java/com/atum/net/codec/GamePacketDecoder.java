@@ -7,6 +7,7 @@ import com.atum.net.IsaacCipher;
 import com.atum.net.NetworkConstants;
 import com.atum.net.model.GamePacket;
 import com.atum.net.model.PacketHeader;
+import com.atum.net.model.PlayerDetails;
 import com.atum.net.model.Revision;
 
 import io.netty.buffer.ByteBuf;
@@ -21,6 +22,7 @@ public class GamePacketDecoder extends ByteToMessageDecoder {
 
 	private int packetOpCode = 0;
 	private int packetSize = 0;
+	private PlayerDetails player;
 	private PacketHeader packetType = PacketHeader.EMPTY;
 	private GameService service;
 
@@ -28,8 +30,9 @@ public class GamePacketDecoder extends ByteToMessageDecoder {
 		OPCODE, SIZE, PAYLOAD;
 	}
 
-	public GamePacketDecoder(GameService service, IsaacCipher decryptor) {
+	public GamePacketDecoder(GameService service, PlayerDetails player,IsaacCipher decryptor) {
 		this.decryptor = decryptor;
+		this.player = player;
 		this.service = service;
 	}
 
@@ -54,7 +57,7 @@ public class GamePacketDecoder extends ByteToMessageDecoder {
 	}
 
 	private void queuePacket(ByteBuf readBytes) {
-		service.queuePacket(new GamePacket(packetOpCode, packetSize, readBytes));
+		service.queuePacket(player,new GamePacket(packetOpCode, packetSize, readBytes));
 	}
 
 	private void decodePayload(ByteBuf in) {
