@@ -1,5 +1,7 @@
 package com.atum.net.model;
 
+import io.netty.channel.ChannelHandlerContext;
+
 public class PlayerDetails {
 
 	public enum Rights {
@@ -22,11 +24,25 @@ public class PlayerDetails {
 	private String password;
 	private String uuid;
 	private ActionSender actionSender;
+	private ChannelHandlerContext channelCtx;
 
-	public PlayerDetails(String username, String password, String uuid,ActionSender actionSender) {
+	public PlayerDetails(ChannelHandlerContext context, String username, String password, String uuid, ActionSender actionSender) {
+		this.channelCtx = context;
 		this.username = username;
 		this.password = password;
 		this.uuid = uuid;
+	}
+
+	public PlayerDetails(PlayerDetails details) {
+		this.channelCtx = details.getChannelContext();
+		this.username = details.getName();
+		this.password = details.getPassword();
+		this.uuid = details.uuid;
+		this.actionSender = details.getActionSender();
+	}
+
+	private ChannelHandlerContext getChannelContext() {
+		return channelCtx;
 	}
 
 	public Rights getRights() {
@@ -39,5 +55,17 @@ public class PlayerDetails {
 	
 	public ActionSender getActionSender(){
 		return actionSender;
+	}
+	
+	public void write(GamePacket packet){
+		channelCtx.writeAndFlush(packet.getPayload());
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public String getUuid() {
+		return uuid;
 	}
 }

@@ -6,6 +6,10 @@ public class ActionSender implements com.atum.net.model.ActionSender {
 		
 	}
 
+	public void sendInitalLoginDetails() {
+		
+	}
+
 	
 	
 	

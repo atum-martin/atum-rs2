@@ -1,10 +1,12 @@
 package com.atum.game;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import com.atum.game.world.World;
 import com.atum.game.world.model.Player;
 import com.atum.net.GameService;
 import com.atum.net.model.ActionSender;
@@ -33,10 +35,8 @@ public class GameServiceImpl implements GameService {
 		return clientRevs.get(version);
 	}
 
-	public PlayerDetails registerPlayer(String username, String password,
-			String uuid, ActionSender sender) {
-		Player player = new Player(username, password, uuid, sender);
-		return player;
+	public boolean registerPlayer(PlayerDetails details) {
+		return World.getWorld().registerPlayer(details);
 	}
 
 }
