@@ -1,15 +1,12 @@
 package com.atum.game;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 
 import com.atum.game.world.World;
-import com.atum.game.world.model.Player;
 import com.atum.net.GameService;
-import com.atum.net.model.ActionSender;
 import com.atum.net.model.GamePacket;
 import com.atum.net.model.PlayerDetails;
 import com.atum.net.model.Revision;
@@ -39,4 +36,7 @@ public class GameServiceImpl implements GameService {
 		return World.getWorld().registerPlayer(details);
 	}
 
+	public GameServiceImpl(){
+		World.getWorld();
+	}
 }

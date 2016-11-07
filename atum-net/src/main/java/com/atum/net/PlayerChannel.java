@@ -7,6 +7,7 @@ import io.netty.channel.socket.SocketChannel;
 */
 public class PlayerChannel {
 	
+	@SuppressWarnings("unused")
 	private SocketChannel channel;
 
 	public PlayerChannel(SocketChannel channel) {
