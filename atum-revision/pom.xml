@@ -7,9 +7,7 @@
     <artifactId>atum-rs2</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <groupId>com.atum</groupId>
   <artifactId>atum-revision</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
   <name>atum-revision</name>
   <url>http://maven.apache.org</url>
   <properties>
