@@ -10,6 +10,7 @@ public class Player extends Entity {
 
 	private PlayerDetails details;
 	private ActionSender actionSender;
+	private Position position = Position.DEFAULT_POSITION;
 	
 	public Player(PlayerDetails details) {
 		this.details = details;
@@ -22,8 +23,7 @@ public class Player extends Entity {
 	}
 
 	public Position getPosition() {
-		// TODO Auto-generated method stub
-		return null;
+		return position;
 	}
 
 	public void write(GamePacket gamePacket) {
