@@ -205,7 +205,8 @@ public class LoginDecoder extends ByteToMessageDecoder {
 			sendFinalResponse(context, LoginResponse.INVALID_CREDENTIALS);
 			return;
 		}
-		PlayerDetails player = new PlayerDetails(context,username,password,uuid,revision.getActionSender());
+		PlayerDetails player = new PlayerDetails(context,username,password,uuid);
+		player.setActionSender(revision.getActionSender());
 		gameService.registerPlayer(player);
 		
 		ByteBuf out = Unpooled.buffer(3);

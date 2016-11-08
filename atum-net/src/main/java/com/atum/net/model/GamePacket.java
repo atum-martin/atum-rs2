@@ -20,10 +20,6 @@ public class GamePacket {
 		this(packetOpCode,packetSize,readBytes,null);
 	}
 
-	public GamePacket(int opcode2, PacketHeader type2, ByteBuf buffer) {
-		// TODO Auto-generated constructor stub
-	}
-
 	public int getOpCode() {
 		return opCode;
 	}

@@ -2,8 +2,9 @@ package com.atum.game.world;
 
 import java.util.ArrayList;
 
-import com.atum.game.world.model.Entity;
-import com.atum.game.world.model.Player;
+import org.atum.model.entity.Entity;
+import org.atum.model.entity.Player;
+
 import com.atum.net.model.PlayerDetails;
 
 public class World {

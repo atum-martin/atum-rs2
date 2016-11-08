@@ -5,4 +5,6 @@ public interface ActionSender {
 	public void sendMapRegion();
 
 	public void sendInitalLoginDetails();
+
+	public void setPlayer(Object player);
 }

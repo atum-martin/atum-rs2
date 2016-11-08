@@ -26,7 +26,7 @@ public class PlayerDetails {
 	private ActionSender actionSender;
 	private ChannelHandlerContext channelCtx;
 
-	public PlayerDetails(ChannelHandlerContext context, String username, String password, String uuid, ActionSender actionSender) {
+	public PlayerDetails(ChannelHandlerContext context, String username, String password, String uuid) {
 		this.channelCtx = context;
 		this.username = username;
 		this.password = password;
@@ -67,5 +67,9 @@ public class PlayerDetails {
 
 	public String getUuid() {
 		return uuid;
+	}
+
+	public void setActionSender(ActionSender actionSender) {
+		this.actionSender = actionSender;
 	}
 }

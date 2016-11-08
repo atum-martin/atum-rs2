@@ -436,7 +436,7 @@ public final class GamePacketBuilder {
 
 		Preconditions.checkState(mode == AccessMode.BYTE_ACCESS, "Must be in byte access mode to convert to a packet.");
 
-		return new GamePacket(opcode, type, buffer);
+		return new GamePacket(opcode, buffer.readableBytes(), buffer, type);
 	}
 
 }

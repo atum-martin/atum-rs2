@@ -1,4 +1,4 @@
-package com.atum.revision.r317;
+package com.atum.game.revision.r317;
 
 import com.atum.net.model.Revision;
 
@@ -62,7 +62,7 @@ public class Revision317 implements Revision {
 			0, 0, 6, 6, 0, 0, 0            //250
 		};
 	
-	private ActionSender actionSender = new ActionSender();
+	private static final Class<ActionSender> actionSender = ActionSender.class;
 
 	public String getVersion() {
 		return "317";
@@ -75,9 +75,16 @@ public class Revision317 implements Revision {
 	public int[] getServerPacketSizes() {
 		return SERVER_PACKET_SIZES;
 	}
-	
-	public ActionSender getActionSender(){
-		return actionSender;
-	}
 
+	public com.atum.net.model.ActionSender getActionSender() {
+		ActionSender output = null;
+		try {
+			output = actionSender.newInstance();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		return output;
+	}
 }
