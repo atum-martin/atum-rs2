@@ -5,7 +5,6 @@ import org.atum.model.entity.Player;
 import com.atum.net.codec.GamePacketBuilder;
 import com.atum.net.codec.builder.DataTransformation;
 import com.atum.net.codec.builder.DataType;
-import com.atum.net.model.PlayerDetails;
 
 public class ActionSender implements com.atum.net.model.ActionSender {
 	
@@ -23,7 +22,7 @@ public class ActionSender implements com.atum.net.model.ActionSender {
 	}
 
 	public void sendInitalLoginDetails() {
-		
+		sendMapRegion();
 	}
 
 	

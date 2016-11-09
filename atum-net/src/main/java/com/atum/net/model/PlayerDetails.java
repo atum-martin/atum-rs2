@@ -58,7 +58,7 @@ public class PlayerDetails {
 	}
 	
 	public void write(GamePacket packet){
-		channelCtx.writeAndFlush(packet.getPayload());
+		channelCtx.channel().writeAndFlush(packet);
 	}
 
 	public String getPassword() {

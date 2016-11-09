@@ -207,7 +207,7 @@ public class LoginDecoder extends ByteToMessageDecoder {
 		}
 		PlayerDetails player = new PlayerDetails(context,username,password,uuid);
 		player.setActionSender(revision.getActionSender());
-		gameService.registerPlayer(player);
+		
 		
 		ByteBuf out = Unpooled.buffer(3);
 		//success
@@ -219,5 +219,7 @@ public class LoginDecoder extends ByteToMessageDecoder {
 		context.channel().attr(NetworkConstants.REVISION).set(revision);
 		context.pipeline().addLast("game-packet-encoder", new GamePacketEncoder(encryptor));
 		context.pipeline().replace("login-header-decoder","game-packet-decoder", new GamePacketDecoder(gameService,player,decryptor));
+	
+		gameService.registerPlayer(player);
 	}
 }
